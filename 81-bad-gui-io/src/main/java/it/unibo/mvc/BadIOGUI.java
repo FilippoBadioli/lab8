@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Random;
 
@@ -65,6 +66,30 @@ public class BadIOGUI {
                 }
             }
         });
+
+        final JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        frame.setContentPane(panel);
+        panel.add(write);
+
+        final JButton read = new JButton("Read on file");
+        panel.add(read);
+        read.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent arg0) {
+                final Path path = Path.of(PATH);
+                try {
+                    final List<String> fileContent = Files.readAllLines(path, StandardCharsets.UTF_8);
+                    for (final String s : fileContent) {
+                        System.out.println(s); // NOPMD: 
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace(); // NOPMD: allowed as this is just an exercise
+                }
+            }
+        });
+
+
     }
 
     private void display() {
@@ -80,6 +105,7 @@ public class BadIOGUI {
         final int sw = (int) screen.getWidth();
         final int sh = (int) screen.getHeight();
         frame.setSize(sw / PROPORTION, sh / PROPORTION);
+        frame.pack();
         /*
          * Instead of appearing at (0,0), upper left corner of the screen, this
          * flag makes the OS window manager take care of the default positioning
